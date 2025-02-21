@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: light-novel-web-api
+  datasource:
+    url: jdbc:mysql://localhost:3306/ligth_novel_web_db
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: create
+server:
+  port: 8080
+jwt:
+  signer_key: ZxsI0fMn77S+5xSuE2AQyPQ/RDtABJ0ZgbebwgZmWAbKOnPWfBpFM8bdEAgdn8NQ
+
