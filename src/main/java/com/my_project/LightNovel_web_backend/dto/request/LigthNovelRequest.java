@@ -18,6 +18,9 @@ public class LigthNovelRequest {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String displayName;
+
     private String image;
 
     private String description;

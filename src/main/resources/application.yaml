@@ -7,7 +7,7 @@ spring:
     password: 123456
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
 server:
   port: 8080
 jwt:

@@ -7,6 +7,6 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface LigthNovelMapper {
-    public LigthNovel requestToEntity(LigthNovelRequest request);
-    public LigthNovelResponse entityToResponse(LigthNovel ligthNovel);
+    LigthNovel requestToEntity(LigthNovelRequest request);
+    LigthNovelResponse entityToResponse(LigthNovel ligthNovel);
 }

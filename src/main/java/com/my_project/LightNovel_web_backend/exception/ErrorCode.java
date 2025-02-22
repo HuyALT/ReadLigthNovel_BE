@@ -8,10 +8,9 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     USER_EXISTED(101, "User existed", HttpStatus.BAD_REQUEST),
     EMAIL_EXISTED(102,"Email extisted", HttpStatus.BAD_REQUEST),
-    USERNAME_INVALID(103,"Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(104,"Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
-    UNAUTHENTICATED(105, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    INVALID_LIGHTNOVEL_REQUEST(106,"Invalid ligth novel request",HttpStatus.BAD_REQUEST);
+    REGISTER_REQUEST_INVALID(103,"Can not register", HttpStatus.BAD_REQUEST),
+    UNAUTHENTICATED(104, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    INVALID_REQUEST(105,"something was wrong with your request",HttpStatus.BAD_REQUEST);
 
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

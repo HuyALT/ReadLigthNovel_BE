@@ -5,6 +5,7 @@ import com.my_project.LightNovel_web_backend.dto.response.LigthNovelResponse;
 import com.my_project.LightNovel_web_backend.entity.LigthNovel;
 import com.my_project.LightNovel_web_backend.mapper.LigthNovelMapper;
 import com.my_project.LightNovel_web_backend.repository.LigthNovelRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ public class LigthNovelService implements ILigthNovelService {
     private final LigthNovelMapper ligthNovelMapper;
 
     @Override
+    @Transactional
     public LigthNovelResponse addNew(LigthNovelRequest request) {
         LigthNovel ligthNovel = ligthNovelMapper.requestToEntity(request);
         ligthNovel = ligthNovelRepository.save(ligthNovel);
@@ -39,5 +41,15 @@ public class LigthNovelService implements ILigthNovelService {
     @Override
     public int totalPage(int PageSize) {
         return (int)ligthNovelRepository.count()/PageSize;
+    }
+
+    @Override
+    public List<LigthNovelResponse> findByGeners(List<String> genres) {
+        return List.of();
+    }
+
+    @Override
+    public List<LigthNovelResponse> findByLatestChapterUpdate(Pageable pageable) {
+        return List.of();
     }
 }

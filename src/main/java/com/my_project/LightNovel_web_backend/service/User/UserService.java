@@ -8,6 +8,7 @@ import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
 import com.my_project.LightNovel_web_backend.mapper.UserMapper;
 import com.my_project.LightNovel_web_backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public UserResponse addUser(UserRequest request) {
         if (userRepository.existsByUserName(request.getUserName())){
             throw new AppException(ErrorCode.USER_EXISTED);

@@ -27,6 +27,9 @@ public class LigthNovel {
 
     private String name;
 
+    @Column(name = "display_name")
+    private String displayName;
+
     private String image;
 
     private String description;

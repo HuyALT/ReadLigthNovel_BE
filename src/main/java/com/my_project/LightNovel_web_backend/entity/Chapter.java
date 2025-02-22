@@ -36,7 +36,7 @@ public class Chapter {
 
     @UpdateTimestamp
     @Column(name = "update_at")
-    private LocalDateTime UpdateAt;
+    private LocalDateTime updateAt;
 
     private int viewtotal;
 
