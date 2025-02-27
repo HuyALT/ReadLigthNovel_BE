@@ -2,6 +2,7 @@ package com.my_project.LightNovel_web_backend.service.LightNovel;
 
 import com.my_project.LightNovel_web_backend.dto.request.LigthNovelRequest;
 import com.my_project.LightNovel_web_backend.dto.response.LigthNovelResponse;
+import com.my_project.LightNovel_web_backend.entity.Genre;
 import com.my_project.LightNovel_web_backend.entity.LigthNovel;
 import com.my_project.LightNovel_web_backend.mapper.LigthNovelMapper;
 import com.my_project.LightNovel_web_backend.repository.LigthNovelRepository;
@@ -31,11 +32,10 @@ public class LigthNovelService implements ILigthNovelService {
     }
 
     @Override
-    public List<LigthNovelResponse> findAll(int pageNo, int pageSize, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+    public List<LigthNovelResponse> findAll(Pageable pageable) {
         Page<LigthNovel> page = ligthNovelRepository.findAll(pageable);
 
-        return page.getContent().stream().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+        return page.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -44,12 +44,27 @@ public class LigthNovelService implements ILigthNovelService {
     }
 
     @Override
-    public List<LigthNovelResponse> findByGeners(List<String> genres) {
-        return List.of();
+    public List<LigthNovelResponse> findByGeners(List<String> genres, Pageable pageable) {
+        Page<LigthNovel> ligthNovels = ligthNovelRepository.findByGeners(genres, pageable);
+
+        return ligthNovels.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<LigthNovelResponse> findByLatestChapterUpdate(Pageable pageable) {
-        return List.of();
+        Page<LigthNovel> ligthNovels = ligthNovelRepository.findByLatestChapterUpdate(pageable);
+
+        return ligthNovels.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LigthNovelResponse> findByGenreSortByLastestChapterUpdate(List<String> genres, Pageable pageable) {
+        Page<LigthNovel> ligthNovels = ligthNovelRepository.findByGenersSortByLastestChapterUpdate(genres, pageable);
+        return ligthNovels.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean deleteLigthNovel(long id) {
+        return false;
     }
 }

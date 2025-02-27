@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -31,4 +33,6 @@ public class LigthNovelRequest {
     private LigthNovelStatus status;
 
     private String translationGroups;
+
+    private List<Long> genreId;
 }

@@ -62,7 +62,7 @@ public class LigthNovel {
     @OneToMany(mappedBy = "ligthNovel", cascade = CascadeType.REMOVE)
     private List<Chapter> chapters;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             joinColumns = @JoinColumn(name = "ligth_novel_id"),
             inverseJoinColumns = @JoinColumn(name = "genres_id")

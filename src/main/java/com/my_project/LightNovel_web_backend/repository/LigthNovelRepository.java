@@ -16,4 +16,8 @@ public interface LigthNovelRepository extends JpaRepository<LigthNovel, Long> {
 
     @Query("SELECT l FROM LigthNovel l JOIN l.chapters ch GROUP BY l ORDER BY MAX(ch.updateAt)")
     Page<LigthNovel> findByLatestChapterUpdate(Pageable pageable);
+
+    @Query("SELECT l FROM LightMovel l JOIN l.genres g LEFT JOIN l.chapters c WHERE g.name IN :genres GROUP BY l.id ORDER BY MAX(c.updateAt)")
+    Page<LigthNovel> findByGenersSortByLastestChapterUpdate(List<String> genres, Pageable pageable);
+
 }

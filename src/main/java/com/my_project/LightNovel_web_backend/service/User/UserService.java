@@ -23,8 +23,6 @@ public class UserService implements IUserService {
 
     private final UserMapper userMapper;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Override
     @Transactional
     public UserResponse addUser(UserRequest request) {
@@ -36,8 +34,6 @@ public class UserService implements IUserService {
         }
         User user = userMapper.requestToEntity(request);
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
         return userMapper.entityToResponse(userRepository.save(user));
     }
 

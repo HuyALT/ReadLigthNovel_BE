@@ -9,9 +9,10 @@ import java.util.List;
 
 public interface ILigthNovelService {
     LigthNovelResponse addNew(LigthNovelRequest request);
-    List<LigthNovelResponse> findAll(int pageNo, int pageSize, String sortBy);
+    List<LigthNovelResponse> findAll(Pageable pageable);
     int totalPage(int PageSize);
-    List<LigthNovelResponse> findByGeners(List<String> genres);
+    List<LigthNovelResponse> findByGeners(List<String> genres, Pageable pageable);
     List<LigthNovelResponse> findByLatestChapterUpdate(Pageable pageable);
-
+    List<LigthNovelResponse> findByGenreSortByLastestChapterUpdate(List<String> genres ,Pageable pageable);
+    boolean deleteLigthNovel(long id);
 }
