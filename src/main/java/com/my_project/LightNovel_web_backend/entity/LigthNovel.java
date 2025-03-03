@@ -1,7 +1,7 @@
 package com.my_project.LightNovel_web_backend.entity;
 
 
-import com.my_project.LightNovel_web_backend.Enum.LigthNovelStatus;
+import com.my_project.LightNovel_web_backend.enums.LigthNovelStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

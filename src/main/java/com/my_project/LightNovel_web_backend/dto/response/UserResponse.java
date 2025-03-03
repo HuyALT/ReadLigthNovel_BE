@@ -1,11 +1,9 @@
 package com.my_project.LightNovel_web_backend.dto.response;
 
 
-import com.my_project.LightNovel_web_backend.Enum.Role;
+import com.my_project.LightNovel_web_backend.enums.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor

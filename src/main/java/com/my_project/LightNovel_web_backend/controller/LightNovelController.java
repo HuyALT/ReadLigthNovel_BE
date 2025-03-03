@@ -55,4 +55,9 @@ public class LightNovelController {
         );
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.findByGenreSortByLastestChapterUpdate(genres, pageable));
     }
+
+    @GetMapping
+    public ResponseEntity<?> getById(@RequestParam Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.getById(id));
+    }
 }

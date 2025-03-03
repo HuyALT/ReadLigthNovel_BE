@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,7 +35,7 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public void deleteGenre(long id) {
+    public void deleteGenre(int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(
                 ()-> new AppException(ErrorCode.INVALID_REQUEST)
         );
@@ -48,17 +49,18 @@ public class GenreService implements IGenreService {
     @Override
     public List<GenreReponse> findAll() {
 
-        return genreRepository.findAll().stream().map(genreMapper::entiryToResponse).toList();
+        return genreRepository.findAll().stream().map(genreMapper::entiryToResponse).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public GenreReponse edit(GenreRequest request, long id) {
+    public GenreReponse editGenre(GenreRequest request, int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(
                 ()-> new AppException(ErrorCode.INVALID_REQUEST)
         );
         genre.setName(request.getName());
         genre.setDescription(request.getDescription());
+        genre.setId(id);
         return genreMapper.entiryToResponse(genreRepository.save(genre));
     }
 }

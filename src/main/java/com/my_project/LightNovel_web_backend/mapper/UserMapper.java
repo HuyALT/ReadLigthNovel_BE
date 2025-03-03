@@ -1,6 +1,6 @@
 package com.my_project.LightNovel_web_backend.mapper;
 
-import com.my_project.LightNovel_web_backend.Enum.Role;
+import com.my_project.LightNovel_web_backend.enums.Role;
 import com.my_project.LightNovel_web_backend.dto.request.UserRequest;
 import com.my_project.LightNovel_web_backend.dto.response.UserResponse;
 import com.my_project.LightNovel_web_backend.entity.User;

@@ -1,6 +1,5 @@
 package com.my_project.LightNovel_web_backend.service.User;
 
-import com.my_project.LightNovel_web_backend.Enum.Role;
 import com.my_project.LightNovel_web_backend.dto.request.UserRequest;
 import com.my_project.LightNovel_web_backend.dto.response.UserResponse;
 import com.my_project.LightNovel_web_backend.entity.User;
@@ -10,7 +9,6 @@ import com.my_project.LightNovel_web_backend.mapper.UserMapper;
 import com.my_project.LightNovel_web_backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

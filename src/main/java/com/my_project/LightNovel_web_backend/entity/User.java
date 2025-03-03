@@ -1,6 +1,6 @@
 package com.my_project.LightNovel_web_backend.entity;
 
-import com.my_project.LightNovel_web_backend.Enum.Role;
+import com.my_project.LightNovel_web_backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

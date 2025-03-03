@@ -2,18 +2,19 @@ package com.my_project.LightNovel_web_backend.service.LightNovel;
 
 import com.my_project.LightNovel_web_backend.dto.request.LigthNovelRequest;
 import com.my_project.LightNovel_web_backend.dto.response.LigthNovelResponse;
-import com.my_project.LightNovel_web_backend.entity.Genre;
 import com.my_project.LightNovel_web_backend.entity.LigthNovel;
+import com.my_project.LightNovel_web_backend.exception.AppException;
+import com.my_project.LightNovel_web_backend.exception.ErrorCode;
 import com.my_project.LightNovel_web_backend.mapper.LigthNovelMapper;
 import com.my_project.LightNovel_web_backend.repository.LigthNovelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +65,39 @@ public class LigthNovelService implements ILigthNovelService {
     }
 
     @Override
+    @Transactional
     public boolean deleteLigthNovel(long id) {
-        return false;
+        if (!ligthNovelRepository.existsById(id)) {
+            throw new AppException(ErrorCode.INVALID_REQUEST);
+        }
+        try {
+            ligthNovelRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public LigthNovelResponse getById(long id) {
+        Optional<LigthNovel> ligthNovel = ligthNovelRepository.findById(id);
+        if (ligthNovel.isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_REQUEST);
+        }
+
+        return ligthNovelMapper.entityToResponse(ligthNovel.get());
+    }
+
+    @Override
+    @Transactional
+    public LigthNovelResponse editLigthNovel(long id, LigthNovelRequest request) {
+        if (!ligthNovelRepository.existsById(id)) {
+            throw new AppException(ErrorCode.INVALID_REQUEST);
+        }
+        LigthNovel ligthNovel = ligthNovelMapper.requestToEntity(request);
+        ligthNovel.setId(id);
+        ligthNovelRepository.save(ligthNovel);
+
+        return ligthNovelMapper.entityToResponse(ligthNovel);
     }
 }

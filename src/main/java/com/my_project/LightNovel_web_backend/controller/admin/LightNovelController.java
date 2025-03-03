@@ -21,10 +21,29 @@ public class LightNovelController {
     private final LigthNovelService ligthNovelService;
 
     @PostMapping("/addLightNovel")
-    public ResponseEntity<?> addNewLigthNovel(@RequestBody @Valid LigthNovelRequest request, BindingResult bindingResult){
+    public ResponseEntity<?> addNewLigthNovel(@RequestBody @Valid LigthNovelRequest request,
+                                              BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.addNew(request));
+    }
+
+    @PutMapping("/lightNovel/edit")
+    public ResponseEntity<?> editLightNovel(@RequestParam long id,
+                                            @RequestBody @Valid LigthNovelRequest request,
+                                            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            throw new AppException(ErrorCode.INVALID_REQUEST);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.editLigthNovel(id, request));
+    }
+
+    @DeleteMapping("/lightNovel/delete")
+    public ResponseEntity<?> deleteLightNovel(@RequestParam long id) {
+        if (ligthNovelService.deleteLigthNovel(id)) {
+            return ResponseEntity.ok("Delete Success");
+        }
+        return ResponseEntity.internalServerError().body("Server error");
     }
 }
