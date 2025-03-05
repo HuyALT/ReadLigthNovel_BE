@@ -1,21 +1,19 @@
 package com.my_project.LightNovel_web_backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import com.my_project.LightNovel_web_backend.dto.request.UserRequest;
 import com.my_project.LightNovel_web_backend.dto.response.UserResponse;
 import com.my_project.LightNovel_web_backend.enums.Role;
 import com.my_project.LightNovel_web_backend.service.Authentication.AuthenticationService;
 import com.my_project.LightNovel_web_backend.service.User.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,11 +25,10 @@ public class AuthencationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
-    @Mock
+    @MockitoBean
     private AuthenticationService authenticationService;
 
-    @Mock
+    @MockitoBean
     private UserService userService;
 
     private UserRequest userRequest;
@@ -45,6 +42,7 @@ public class AuthencationControllerTest {
                 .email("1234455556")
                 .userName("TESTUSER")
                 .password("123456")
+                .image("abc")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -63,6 +61,7 @@ public class AuthencationControllerTest {
                 .email("example@gmail.com")
                 .userName("TEST")
                 .password("123456")
+                .image("abc")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -79,7 +78,8 @@ public class AuthencationControllerTest {
         userRequest = UserRequest.builder()
                 .email("example@gmail.com")
                 .userName("TESTUSER")
-                .password("1234")
+                .password("123")
+                .image("abc")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -91,10 +91,12 @@ public class AuthencationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
+    @Test
     public void shouldNewUser() throws Exception {
         userRequest = UserRequest.builder()
                 .email("example@gmail.com")
                 .userName("TESTUSER")
+                .image("abc")
                 .password("123456")
                 .build();
         userResponse = UserResponse.builder()
