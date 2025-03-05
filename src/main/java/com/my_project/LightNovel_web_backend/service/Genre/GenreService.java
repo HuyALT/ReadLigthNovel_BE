@@ -3,7 +3,7 @@ package com.my_project.LightNovel_web_backend.service.Genre;
 import com.my_project.LightNovel_web_backend.dto.request.GenreRequest;
 import com.my_project.LightNovel_web_backend.dto.response.GenreReponse;
 import com.my_project.LightNovel_web_backend.entity.Genre;
-import com.my_project.LightNovel_web_backend.entity.LigthNovel;
+import com.my_project.LightNovel_web_backend.entity.LightNovel;
 import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
 import com.my_project.LightNovel_web_backend.mapper.GenreMapper;
@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,11 +38,11 @@ public class GenreService implements IGenreService {
         Genre genre = genreRepository.findById(id).orElseThrow(
                 ()-> new AppException(ErrorCode.INVALID_REQUEST)
         );
-        for (LigthNovel ligthNovel : genre.getLigthNovels()){
-            ligthNovel.getGenres().remove(genre);
+        for (LightNovel lightNovel : genre.getLightNovels()){
+            lightNovel.getGenres().remove(genre);
         }
 
-        ligthNovelRepository.saveAll(genre.getLigthNovels());
+        ligthNovelRepository.saveAll(genre.getLightNovels());
     }
 
     @Override

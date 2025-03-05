@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "light_novel")
-public class LigthNovel {
+public class LightNovel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,18 +53,18 @@ public class LigthNovel {
     @Column(name = "like_total")
     private String likeTotal;
 
-    @OneToMany(mappedBy = "ligthNovel", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "lightNovel", cascade = CascadeType.REMOVE)
     private List<Reveiw> reveiws;
 
-    @ManyToMany(mappedBy = "ligthNovels")
+    @ManyToMany(mappedBy = "lightNovels")
     private List<User> users;
 
-    @OneToMany(mappedBy = "ligthNovel", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "lightNovel", cascade = CascadeType.REMOVE)
     private List<Chapter> chapters;
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @ManyToMany
     @JoinTable(
-            joinColumns = @JoinColumn(name = "ligth_novel_id"),
+            joinColumns = @JoinColumn(name = "light_novel_id"),
             inverseJoinColumns = @JoinColumn(name = "genres_id")
     )
     private List<Genre> genres;

@@ -1,11 +1,9 @@
 package com.my_project.LightNovel_web_backend.dto.response;
 
 import com.my_project.LightNovel_web_backend.enums.LigthNovelStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter

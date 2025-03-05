@@ -2,13 +2,11 @@ package com.my_project.LightNovel_web_backend.dto.request;
 
 import com.my_project.LightNovel_web_backend.enums.LigthNovelStatus;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -32,5 +30,5 @@ public class LigthNovelRequest {
 
     private String translationGroups;
 
-    private List<Long> genreId;
+    private List<Integer> genreId;
 }

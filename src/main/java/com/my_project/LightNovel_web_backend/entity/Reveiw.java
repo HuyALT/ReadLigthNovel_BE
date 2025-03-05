@@ -28,7 +28,7 @@ public class Reveiw {
 
     @ManyToOne
     @JoinColumn(name = "ligth_novel_id")
-    private LigthNovel ligthNovel;
+    private LightNovel lightNovel;
 
     @UpdateTimestamp
     @Column(name = "create_at")

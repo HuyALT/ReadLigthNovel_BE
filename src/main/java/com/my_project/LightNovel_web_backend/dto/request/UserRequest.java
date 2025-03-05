@@ -3,11 +3,14 @@ package com.my_project.LightNovel_web_backend.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class UserRequest {
 
     @NotBlank

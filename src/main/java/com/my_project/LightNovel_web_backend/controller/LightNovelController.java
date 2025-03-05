@@ -18,7 +18,7 @@ public class LightNovelController {
 
     private final LigthNovelService ligthNovelService;
 
-    @GetMapping
+    @GetMapping("/latest")
     public ResponseEntity<?> getAllByChapterUpdate(@PageableDefault(size = 100)Pageable pageable){
         Pageable pageableRequest = PageRequest.of(
                 pageable.getPageNumber(),

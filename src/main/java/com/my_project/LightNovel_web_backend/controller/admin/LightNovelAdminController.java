@@ -11,12 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.BindException;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/dashboard")
-public class LightNovelController {
+@RequestMapping("/api/v1/admin/")
+public class LightNovelAdminController {
 
     private final LigthNovelService ligthNovelService;
 

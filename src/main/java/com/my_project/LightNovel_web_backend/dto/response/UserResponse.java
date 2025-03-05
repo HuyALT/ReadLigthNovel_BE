@@ -2,11 +2,13 @@ package com.my_project.LightNovel_web_backend.dto.response;
 
 
 import com.my_project.LightNovel_web_backend.enums.Role;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class UserResponse {
     private long id;
     private String userName;

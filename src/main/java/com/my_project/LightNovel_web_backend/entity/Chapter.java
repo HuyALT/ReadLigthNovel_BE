@@ -1,10 +1,7 @@
 package com.my_project.LightNovel_web_backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -41,7 +38,7 @@ public class Chapter {
     private int viewtotal;
 
     @ManyToOne
-    private LigthNovel ligthNovel;
+    private LightNovel lightNovel;
 
     @OneToMany(mappedBy = "chapter")
     private List<Comment> comments;

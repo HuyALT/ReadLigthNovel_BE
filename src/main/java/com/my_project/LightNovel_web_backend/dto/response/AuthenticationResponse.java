@@ -1,13 +1,12 @@
 package com.my_project.LightNovel_web_backend.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class AuthenticationResponse {
     private String token;
     boolean authenticate;

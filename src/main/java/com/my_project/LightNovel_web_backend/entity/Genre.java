@@ -26,5 +26,5 @@ public class Genre {
     private String description;
 
     @ManyToMany(mappedBy = "genres")
-    private List<LigthNovel> ligthNovels;
+    private List<LightNovel> lightNovels;
 }

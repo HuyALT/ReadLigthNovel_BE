@@ -37,7 +37,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request->request.requestMatchers((PUBLIC_ENDPOINTS))
                 .permitAll()
                 .requestMatchers("/api/v1/user/users").hasAnyAuthority("SCOPE_USER")
-                .requestMatchers("/api/v1/dashboard/*").hasAnyAuthority("SCOPE_ADMIN")
+                .requestMatchers("/api/v1/admin/*").hasAnyAuthority("SCOPE_ADMIN")
                 .anyRequest().authenticated());
 
 

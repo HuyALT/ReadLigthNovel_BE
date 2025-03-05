@@ -56,5 +56,5 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "light_novel_id")
     )
-    private List<LigthNovel> ligthNovels;
+    private List<LightNovel> lightNovels;
 }
