@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,5 +27,5 @@ public class Genre {
     private String description;
 
     @ManyToMany(mappedBy = "genres")
-    private List<LightNovel> lightNovels;
+    private Set<LightNovel> lightNovels;
 }

@@ -8,7 +8,7 @@ import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
 import com.my_project.LightNovel_web_backend.mapper.GenreMapper;
 import com.my_project.LightNovel_web_backend.repository.GenreRepository;
-import com.my_project.LightNovel_web_backend.repository.LigthNovelRepository;
+import com.my_project.LightNovel_web_backend.repository.LightNovelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class GenreService implements IGenreService {
 
     private final GenreRepository genreRepository;
-    private final LigthNovelRepository ligthNovelRepository;
+    private final LightNovelRepository ligthNovelRepository;
     private final GenreMapper genreMapper;
 
     @Override
@@ -42,7 +42,8 @@ public class GenreService implements IGenreService {
             lightNovel.getGenres().remove(genre);
         }
 
-        ligthNovelRepository.saveAll(genre.getLightNovels());
+        genre.getLightNovels().clear();
+        genreRepository.delete(genre);
     }
 
     @Override

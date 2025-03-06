@@ -9,12 +9,12 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface LigthNovelRepository extends JpaRepository<LightNovel, Long> {
+public interface LightNovelRepository extends JpaRepository<LightNovel, Long> {
 
     @Query("SELECT l FROM LightNovel l JOIN l.genres g WHERE g.name IN :genres")
     Page<LightNovel> findByGeners(@Param("genres") List<String> genres, Pageable pageable);
 
-    @Query("SELECT l FROM LightNovel l LEFT JOIN l.chapters ch ORDER BY MAX(ch.updateAt) DESC")
+    @Query("SELECT l FROM LightNovel l LEFT JOIN l.chapters ch GROUP BY l ORDER BY COALESCE(MAX(ch.updateAt), '2025-01-01') DESC")
     Page<LightNovel> findByLatestChapterUpdate(Pageable pageable);
 
     @Query("SELECT l FROM LightNovel l JOIN l.genres g LEFT JOIN l.chapters c " +

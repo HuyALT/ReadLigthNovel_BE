@@ -2,11 +2,12 @@ package com.my_project.LightNovel_web_backend.service.LightNovel;
 
 import com.my_project.LightNovel_web_backend.dto.request.LigthNovelRequest;
 import com.my_project.LightNovel_web_backend.dto.response.LigthNovelResponse;
+import com.my_project.LightNovel_web_backend.entity.Genre;
 import com.my_project.LightNovel_web_backend.entity.LightNovel;
 import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
-import com.my_project.LightNovel_web_backend.mapper.LigthNovelMapper;
-import com.my_project.LightNovel_web_backend.repository.LigthNovelRepository;
+import com.my_project.LightNovel_web_backend.mapper.LightNovelMapper;
+import com.my_project.LightNovel_web_backend.repository.LightNovelRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,22 +22,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LigthNovelService implements ILigthNovelService {
 
-    private final LigthNovelRepository ligthNovelRepository;
-    private final LigthNovelMapper ligthNovelMapper;
+    private final LightNovelRepository ligthNovelRepository;
+    private final LightNovelMapper lightNovelMapper;
 
     @Override
     @Transactional
     public LigthNovelResponse addNew(LigthNovelRequest request) {
-        LightNovel lightNovel = ligthNovelMapper.requestToEntity(request);
+        LightNovel lightNovel = lightNovelMapper.requestToEntity(request);
         lightNovel = ligthNovelRepository.save(lightNovel);
-        return ligthNovelMapper.entityToResponse(lightNovel);
+        return lightNovelMapper.entityToResponse(lightNovel);
     }
 
     @Override
     public List<LigthNovelResponse> findAll(Pageable pageable) {
         Page<LightNovel> page = ligthNovelRepository.findAll(pageable);
 
-        return page.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+        return page.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -48,30 +49,35 @@ public class LigthNovelService implements ILigthNovelService {
     public List<LigthNovelResponse> findByGeners(List<String> genres, Pageable pageable) {
         Page<LightNovel> ligthNovels = ligthNovelRepository.findByGeners(genres, pageable);
 
-        return ligthNovels.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+        return ligthNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<LigthNovelResponse> findByLatestChapterUpdate(Pageable pageable) {
         Page<LightNovel> ligthNovels = ligthNovelRepository.findByLatestChapterUpdate(pageable);
 
-        return ligthNovels.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+        return ligthNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<LigthNovelResponse> findByGenreSortByLastestChapterUpdate(List<String> genres, Pageable pageable) {
         Page<LightNovel> ligthNovels = ligthNovelRepository.findByGenersSortByLastestChapterUpdate(genres, pageable);
-        return ligthNovels.get().map(ligthNovelMapper::entityToResponse).collect(Collectors.toList());
+        return ligthNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public boolean deleteLigthNovel(long id) {
-        if (!ligthNovelRepository.existsById(id)) {
+        Optional<LightNovel> lightNovel = ligthNovelRepository.findById(id);
+        if (lightNovel.isEmpty()) {
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
         try {
-            ligthNovelRepository.deleteById(id);
+            for (Genre genre : lightNovel.get().getGenres()){
+                genre.getLightNovels().remove(lightNovel.get());
+            }
+            lightNovel.get().getGenres().clear();
+            ligthNovelRepository.delete(lightNovel.get());
             return true;
         } catch (Exception e) {
             return false;
@@ -85,7 +91,7 @@ public class LigthNovelService implements ILigthNovelService {
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
 
-        return ligthNovelMapper.entityToResponse(ligthNovel.get());
+        return lightNovelMapper.entityToResponse(ligthNovel.get());
     }
 
     @Override
@@ -94,10 +100,10 @@ public class LigthNovelService implements ILigthNovelService {
         if (!ligthNovelRepository.existsById(id)) {
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
-        LightNovel lightNovel = ligthNovelMapper.requestToEntity(request);
+        LightNovel lightNovel = lightNovelMapper.requestToEntity(request);
         lightNovel.setId(id);
         ligthNovelRepository.save(lightNovel);
 
-        return ligthNovelMapper.entityToResponse(lightNovel);
+        return lightNovelMapper.entityToResponse(lightNovel);
     }
 }

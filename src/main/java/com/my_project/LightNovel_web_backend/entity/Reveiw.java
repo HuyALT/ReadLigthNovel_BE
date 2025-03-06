@@ -21,6 +21,8 @@ public class Reveiw {
     private long id;
 
     private String content;
+    
+    private int rating;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

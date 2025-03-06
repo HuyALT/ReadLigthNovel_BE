@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -67,5 +68,5 @@ public class LightNovel {
             joinColumns = @JoinColumn(name = "light_novel_id"),
             inverseJoinColumns = @JoinColumn(name = "genres_id")
     )
-    private List<Genre> genres;
+    private Set<Genre> genres;
 }

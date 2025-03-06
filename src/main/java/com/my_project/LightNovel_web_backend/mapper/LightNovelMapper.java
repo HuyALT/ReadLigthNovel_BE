@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class LigthNovelMapper {
+public class LightNovelMapper {
 
     private final GenreRepository genreRepository;
 
