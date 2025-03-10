@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin/")
+@RequestMapping("/api/v1/admin/LightNovel")
 public class LightNovelAdminController {
 
     private final LigthNovelService ligthNovelService;
 
-    @PostMapping("/addLightNovel")
+    @PostMapping("/add")
     public ResponseEntity<?> addNewLigthNovel(@RequestBody @Valid LigthNovelRequest request,
                                               BindingResult bindingResult){
         if (bindingResult.hasErrors()){
@@ -27,7 +27,7 @@ public class LightNovelAdminController {
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.addNew(request));
     }
 
-    @PutMapping("/lightNovel/edit")
+    @PutMapping("/edit")
     public ResponseEntity<?> editLightNovel(@RequestParam long id,
                                             @RequestBody @Valid LigthNovelRequest request,
                                             BindingResult bindingResult) {
@@ -37,7 +37,7 @@ public class LightNovelAdminController {
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.editLigthNovel(id, request));
     }
 
-    @DeleteMapping("/lightNovel/delete")
+    @DeleteMapping("/remove")
     public ResponseEntity<?> deleteLightNovel(@RequestParam long id) {
         if (ligthNovelService.deleteLigthNovel(id)) {
             return ResponseEntity.ok("Delete Success");

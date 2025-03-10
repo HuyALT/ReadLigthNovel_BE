@@ -9,24 +9,32 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/genre")
 public class GenreAdminController {
 
     private final GenreService genreService;
 
-    @PostMapping("/addGenre")
+    @PostMapping("/add")
     public ResponseEntity<?> addNewGenre(@RequestBody @Valid GenreRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(genreService.addNew(request));
+    }
+
+    @DeleteMapping("/remove")
+    public ResponseEntity<?> deleteGenre(@RequestParam int id) {
+        genreService.deleteGenre(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<?> editGener(@RequestParam int id, @RequestBody GenreRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(genreService.editGenre(request, id));
     }
 }
