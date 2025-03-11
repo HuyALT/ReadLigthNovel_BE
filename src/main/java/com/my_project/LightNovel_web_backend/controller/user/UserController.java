@@ -1,4 +1,4 @@
-package com.my_project.LightNovel_web_backend.controller;
+package com.my_project.LightNovel_web_backend.controller.user;
 
 import com.my_project.LightNovel_web_backend.service.Authentication.AuthenticationService;
 import com.my_project.LightNovel_web_backend.service.User.UserService;
@@ -16,8 +16,8 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    @GetMapping("/users")
-    public ResponseEntity<?> getAllUser(){
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(){
 
         return ResponseEntity.ok(userService);
     }

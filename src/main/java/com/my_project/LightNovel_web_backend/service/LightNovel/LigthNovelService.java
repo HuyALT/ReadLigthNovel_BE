@@ -35,9 +35,11 @@ public class LigthNovelService implements ILigthNovelService {
 
     @Override
     public List<LigthNovelResponse> findAll(Pageable pageable) {
-        Page<LightNovel> page = ligthNovelRepository.findAll(pageable);
-
-        return page.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
+        Page<LightNovel> lightNovels = ligthNovelRepository.findAll(pageable);
+        if (lightNovels.isEmpty()) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        return lightNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -47,22 +49,29 @@ public class LigthNovelService implements ILigthNovelService {
 
     @Override
     public List<LigthNovelResponse> findByGeners(List<String> genres, Pageable pageable) {
-        Page<LightNovel> ligthNovels = ligthNovelRepository.findByGeners(genres, pageable);
-
-        return ligthNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
+        Page<LightNovel> lightNovels = ligthNovelRepository.findByGeners(genres, pageable);
+        if (lightNovels.isEmpty()) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        return lightNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<LigthNovelResponse> findByLatestChapterUpdate(Pageable pageable) {
-        Page<LightNovel> ligthNovels = ligthNovelRepository.findByLatestChapterUpdate(pageable);
-
-        return ligthNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
+        Page<LightNovel> lightNovels = ligthNovelRepository.findByLatestChapterUpdate(pageable);
+        if (lightNovels.isEmpty()) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        return lightNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
     public List<LigthNovelResponse> findByGenreSortByLastestChapterUpdate(List<String> genres, Pageable pageable) {
-        Page<LightNovel> ligthNovels = ligthNovelRepository.findByGenersSortByLastestChapterUpdate(genres, pageable);
-        return ligthNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
+        Page<LightNovel> lightNovels = ligthNovelRepository.findByGenersSortByLastestChapterUpdate(genres, pageable);
+        if (lightNovels.isEmpty()) {
+            throw new AppException(ErrorCode.NOTFOUND);
+        }
+        return lightNovels.get().map(lightNovelMapper::entityToResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -70,7 +79,7 @@ public class LigthNovelService implements ILigthNovelService {
     public boolean deleteLigthNovel(long id) {
         Optional<LightNovel> lightNovel = ligthNovelRepository.findById(id);
         if (lightNovel.isEmpty()) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.NOTFOUND);
         }
         try {
             for (Genre genre : lightNovel.get().getGenres()){
@@ -88,7 +97,7 @@ public class LigthNovelService implements ILigthNovelService {
     public LigthNovelResponse getById(long id) {
         Optional<LightNovel> ligthNovel = ligthNovelRepository.findById(id);
         if (ligthNovel.isEmpty()) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.NOTFOUND);
         }
 
         return lightNovelMapper.entityToResponse(ligthNovel.get());
@@ -98,7 +107,7 @@ public class LigthNovelService implements ILigthNovelService {
     @Transactional
     public LigthNovelResponse editLigthNovel(long id, LigthNovelRequest request) {
         if (!ligthNovelRepository.existsById(id)) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.NOTFOUND);
         }
         LightNovel lightNovel = lightNovelMapper.requestToEntity(request);
         lightNovel.setId(id);

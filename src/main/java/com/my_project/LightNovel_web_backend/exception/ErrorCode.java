@@ -10,7 +10,8 @@ public enum ErrorCode {
     EMAIL_EXISTED(102,"Email extisted", HttpStatus.BAD_REQUEST),
     REGISTER_REQUEST_INVALID(103,"Can not register", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(104, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    INVALID_REQUEST(105,"something was wrong with your request",HttpStatus.BAD_REQUEST);
+    INVALID_REQUEST(105,"something was wrong with your request",HttpStatus.BAD_REQUEST),
+    NOTFOUND(106, "No data available", HttpStatus.NOT_FOUND);
 
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

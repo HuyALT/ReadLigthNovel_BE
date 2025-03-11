@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,9 +43,8 @@ public class AuthencationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String bearerToken) throws ParseException, JOSEException {
-        String token = bearerToken.substring(6);
-        authenticationService.logout(token);
+    public ResponseEntity<?> logout(@AuthenticationPrincipal Jwt jwt) throws ParseException, JOSEException {
+        authenticationService.logout(jwt.getTokenValue());
         return ResponseEntity.ok().build();
     }
 }

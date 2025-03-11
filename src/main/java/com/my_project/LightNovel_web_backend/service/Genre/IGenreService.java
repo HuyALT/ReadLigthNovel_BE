@@ -8,7 +8,8 @@ import java.util.List;
 public interface IGenreService {
     GenreReponse addNew(GenreRequest request);
     void deleteGenre(int id);
-    List<GenreReponse> findAll();
+    List<GenreReponse> getAllGenre();
     GenreReponse editGenre(GenreRequest request, int id);
+    GenreReponse getById(int id);
 
 }
