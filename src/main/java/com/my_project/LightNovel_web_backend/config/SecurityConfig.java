@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     @NonFinal
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/v1/auth/*"
+            "/api/v1/lightnovel/*","/api/v1/auth/*"
     };
 
     private final CustomJwtDecoder customJwtDecoder;
@@ -38,7 +38,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request->request.requestMatchers((PUBLIC_ENDPOINTS))
                 .permitAll()
-                .requestMatchers("/api/v1/user/users").hasAnyAuthority("SCOPE_USER")
+                .requestMatchers("/api/v1/user/*").hasAnyAuthority("SCOPE_USER")
                 .requestMatchers("/api/v1/admin/*").hasAnyAuthority("SCOPE_ADMIN")
                 .anyRequest().authenticated());
 

@@ -5,6 +5,8 @@ import com.my_project.LightNovel_web_backend.service.User.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,9 +19,19 @@ public class UserController {
     private final AuthenticationService authenticationService;
 
     @GetMapping("/info")
-    public ResponseEntity<?> getInfo(){
+    public ResponseEntity<?> getInfo(@AuthenticationPrincipal Jwt jwt){
 
-        return ResponseEntity.ok(userService);
+        return ResponseEntity.ok(userService.getUserInfo(jwt.getTokenValue()));
+    }
+
+    @PatchMapping("/changeEmail")
+    public ResponseEntity<?> changeEmail(@AuthenticationPrincipal Jwt jwt, String email) {
+        return ResponseEntity.ok(userService.chageEmail(jwt.getTokenValue(), email));
+    }
+
+    @PatchMapping("/changeImage")
+    public ResponseEntity<?> changeImage(@AuthenticationPrincipal Jwt jwt, String image) {
+        return ResponseEntity.ok(userService.changeImage(jwt.getTokenValue(),image));
     }
 
 }
