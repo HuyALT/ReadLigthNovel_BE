@@ -57,7 +57,7 @@ public class GenreService implements IGenreService {
 
     @Override
     @Transactional
-    public GenreReponse editGenre(GenreRequest request, int id) {
+    public GenreReponse updateGenre(GenreRequest request, int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(
                 ()-> new AppException(ErrorCode.NOTFOUND)
         );

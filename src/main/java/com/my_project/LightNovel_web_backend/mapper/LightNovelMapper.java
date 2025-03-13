@@ -14,10 +14,7 @@ import java.util.Optional;
 
 
 @Component
-@RequiredArgsConstructor
 public class LightNovelMapper {
-
-    private final GenreRepository genreRepository;
 
     public LightNovel requestToEntity(LigthNovelRequest request) {
         LightNovel lightNovel = new LightNovel();
@@ -27,13 +24,7 @@ public class LightNovelMapper {
         lightNovel.setImage(request.getImage());
         lightNovel.setDescription(request.getDescription());
         lightNovel.setStatus(request.getStatus());
-        for (int index: request.getGenreId()) {
-            Optional<Genre> genre = genreRepository.findById(index);
-            if (genre.isEmpty()) {
-                throw new AppException(ErrorCode.INVALID_REQUEST);
-            }
-            lightNovel.getGenres().add(genre.get());
-        }
+
         return lightNovel;
     }
     public LigthNovelResponse entityToResponse(LightNovel lightNovel) {

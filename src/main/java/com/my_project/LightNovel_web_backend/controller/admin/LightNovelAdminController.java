@@ -34,7 +34,7 @@ public class LightNovelAdminController {
         if (bindingResult.hasErrors()){
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.editLigthNovel(id, request));
+        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.updateLigthNovel(id, request));
     }
 
     @DeleteMapping("/remove")

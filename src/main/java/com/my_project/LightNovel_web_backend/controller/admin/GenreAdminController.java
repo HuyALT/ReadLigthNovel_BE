@@ -35,6 +35,6 @@ public class GenreAdminController {
 
     @PutMapping("/edit")
     public ResponseEntity<?> editGener(@RequestParam int id, @RequestBody GenreRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(genreService.editGenre(request, id));
+        return ResponseEntity.status(HttpStatus.OK).body(genreService.updateGenre(request, id));
     }
 }

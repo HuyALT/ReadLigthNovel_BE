@@ -9,7 +9,7 @@ public interface IGenreService {
     GenreReponse addNew(GenreRequest request);
     void deleteGenre(int id);
     List<GenreReponse> getAllGenre();
-    GenreReponse editGenre(GenreRequest request, int id);
+    GenreReponse updateGenre(GenreRequest request, int id);
     GenreReponse getById(int id);
 
 }

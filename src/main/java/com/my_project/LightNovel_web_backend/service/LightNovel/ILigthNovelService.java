@@ -17,5 +17,5 @@ public interface ILigthNovelService {
 
     LigthNovelResponse addNew(LigthNovelRequest request);
     boolean deleteLigthNovel(long id);
-    LigthNovelResponse editLigthNovel(long id, LigthNovelRequest request);
+    LigthNovelResponse updateLigthNovel(long id, LigthNovelRequest request);
 }

@@ -10,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChapterRequest {
-    public class Chapter {
 
         @NotBlank
         private String title;
@@ -24,5 +23,4 @@ public class ChapterRequest {
 
         @NotBlank
         private long lightNovelId;
-    }
 }

@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ChapterResponse {
 
-    public class Chapter {
-
         private long id;
 
         private String title;
@@ -26,5 +24,5 @@ public class ChapterResponse {
         private LocalDateTime updateAt;
 
         private int viewtotal;
-    }
+
 }
