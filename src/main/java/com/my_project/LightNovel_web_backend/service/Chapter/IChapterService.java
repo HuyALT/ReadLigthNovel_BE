@@ -8,7 +8,7 @@ import java.util.List;
 public interface IChapterService {
 
     ChapterResponse addNew(ChapterRequest request);
-    ChapterResponse updateChapter(ChapterRequest request);
+    ChapterResponse updateChapter(ChapterRequest request, long chapterId);
     void deleteChapter(long chapterId);
 
     void increaseView(long chapterId);
