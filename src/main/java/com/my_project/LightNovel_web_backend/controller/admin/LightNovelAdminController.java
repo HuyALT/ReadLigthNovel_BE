@@ -24,11 +24,11 @@ public class LightNovelAdminController {
         if (bindingResult.hasErrors()){
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.addNew(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ligthNovelService.addNew(request));
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<?> editLightNovel(@RequestParam long id,
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editLightNovel(@PathVariable Long id,
                                             @RequestBody @Valid LigthNovelRequest request,
                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
@@ -37,8 +37,8 @@ public class LightNovelAdminController {
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.updateLigthNovel(id, request));
     }
 
-    @DeleteMapping("/remove")
-    public ResponseEntity<?> deleteLightNovel(@RequestParam long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteLightNovel(@PathVariable long id) {
         if (ligthNovelService.deleteLigthNovel(id)) {
             return ResponseEntity.ok("Delete Success");
         }

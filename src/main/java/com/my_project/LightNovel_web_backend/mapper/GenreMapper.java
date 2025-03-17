@@ -16,10 +16,10 @@ public class GenreMapper {
     }
 
     public GenreReponse entiryToResponse(Genre genre) {
-        GenreReponse genreReponse = new GenreReponse();
-        genreReponse.setName(genre.getName());
-        genreReponse.setDescription(genre.getDescription());
-        genreReponse.setId(genre.getId());
-        return genreReponse;
+        return GenreReponse.builder()
+                .id(genre.getId())
+                .name(genre.getName())
+                .description(genre.getDescription())
+                .build();
     }
 }

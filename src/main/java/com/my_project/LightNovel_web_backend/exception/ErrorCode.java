@@ -11,7 +11,7 @@ public enum ErrorCode {
     REGISTER_REQUEST_INVALID(103,"Can not register", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(104, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     INVALID_REQUEST(105,"something was wrong with your request",HttpStatus.BAD_REQUEST),
-    NOTFOUND(106, "No data available", HttpStatus.NOT_FOUND);
+    NOT_FOUND(106, "No data available", HttpStatus.NOT_FOUND);
 
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

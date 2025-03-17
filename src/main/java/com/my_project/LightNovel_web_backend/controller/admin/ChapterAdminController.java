@@ -24,12 +24,12 @@ public class ChapterAdminController {
         if (bindingResult.hasErrors()) {
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(chapterService.addNew(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(chapterService.addNew(request));
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateChapter(@RequestBody @Valid ChapterRequest request,
-                                           @RequestParam long chapterId,
+                                           @PathVariable Long chapterId,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new AppException(ErrorCode.INVALID_REQUEST);
@@ -37,10 +37,10 @@ public class ChapterAdminController {
         return ResponseEntity.status(HttpStatus.OK).body(chapterService.updateChapter(request,chapterId));
     }
 
-    @DeleteMapping("/remove")
-    public ResponseEntity<?> deleteChapter(@RequestParam long chapterId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteChapter(@PathVariable Long chapterId) {
         chapterService.deleteChapter(chapterId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

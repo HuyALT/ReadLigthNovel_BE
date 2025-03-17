@@ -36,15 +36,6 @@ public class LightNovelController {
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.findAll(pageableRequest));
     }
 
-    @GetMapping("/genresAll")
-    public ResponseEntity<?> getByGenre(@PageableDefault(size = 100)Pageable pageable,
-                                        @RequestBody List<String> genres){
-        Pageable pageableRequest = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageNumber()
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.findByGeners(genres, pageable));
-    }
 
     @GetMapping("/genreFillter")
     public ResponseEntity<?> getByGenreLastestChapterUpdate(@PageableDefault(size = 100)Pageable pageable,
@@ -56,8 +47,8 @@ public class LightNovelController {
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.findByGenreSortByLastestChapterUpdate(genres, pageable));
     }
 
-    @GetMapping
-    public ResponseEntity<?> getById(@RequestParam Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.getById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.findById(id));
     }
 }

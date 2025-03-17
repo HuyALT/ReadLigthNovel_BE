@@ -12,6 +12,6 @@ public interface IChapterService {
     void deleteChapter(long chapterId);
 
     void increaseView(long chapterId);
-    List<ChapterResponse> getChaptersByLightNovel(long lightnovelId);
+    List<ChapterResponse> findChaptersByLightNovel(long lightnovelId);
 
 }

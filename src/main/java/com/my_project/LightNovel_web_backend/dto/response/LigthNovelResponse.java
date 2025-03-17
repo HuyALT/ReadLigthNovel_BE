@@ -3,6 +3,9 @@ package com.my_project.LightNovel_web_backend.dto.response;
 import com.my_project.LightNovel_web_backend.enums.LigthNovelStatus;
 import lombok.*;
 
+import java.security.SecureRandom;
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +24,8 @@ public class LigthNovelResponse {
     private String author;
 
     private LigthNovelStatus status;
+
+    private List<String> genres;
 
     private String translationGroups;
 }

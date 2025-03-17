@@ -31,12 +31,12 @@ public class UserMapper {
     }
 
     public UserResponse entityToResponse(User user) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.getId());
-        userResponse.setUserName(user.getUserName());
-        userResponse.setRole(user.getRole());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setImage(user.getImage());
-        return userResponse;
+        return UserResponse.builder()
+                .id(user.getId())
+                .image(user.getImage())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .userName(user.getUserName())
+                .build();
     }
 }

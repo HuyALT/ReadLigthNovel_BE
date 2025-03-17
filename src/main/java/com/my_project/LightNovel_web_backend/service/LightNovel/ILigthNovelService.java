@@ -10,10 +10,10 @@ public interface ILigthNovelService {
 
     List<LigthNovelResponse> findAll(Pageable pageable);
     int totalPage(int PageSize);
-    List<LigthNovelResponse> findByGeners(List<String> genres, Pageable pageable);
+//    List<LigthNovelResponse> findByGeners(List<String> genres, Pageable pageable);
     List<LigthNovelResponse> findByLatestChapterUpdate(Pageable pageable);
     List<LigthNovelResponse> findByGenreSortByLastestChapterUpdate(List<String> genres ,Pageable pageable);
-    LigthNovelResponse getById(long id);
+    LigthNovelResponse findById(long id);
 
     LigthNovelResponse addNew(LigthNovelRequest request);
     boolean deleteLigthNovel(long id);

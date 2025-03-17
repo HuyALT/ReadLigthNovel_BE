@@ -24,17 +24,17 @@ public class GenreAdminController {
             throw new AppException(ErrorCode.INVALID_REQUEST);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(genreService.addNew(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(genreService.addNew(request));
     }
 
-    @DeleteMapping("/remove")
-    public ResponseEntity<?> deleteGenre(@RequestParam int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteGenre(@PathVariable Integer id) {
         genreService.deleteGenre(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("/edit")
-    public ResponseEntity<?> editGener(@RequestParam int id, @RequestBody GenreRequest request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editGener(@PathVariable Integer id, @RequestBody GenreRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(genreService.updateGenre(request, id));
     }
 }

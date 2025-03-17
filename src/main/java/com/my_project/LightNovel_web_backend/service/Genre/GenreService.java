@@ -36,7 +36,7 @@ public class GenreService implements IGenreService {
     @Override
     public void deleteGenre(int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(
-                ()-> new AppException(ErrorCode.NOTFOUND)
+                ()-> new AppException(ErrorCode.NOT_FOUND)
         );
         for (LightNovel lightNovel : genre.getLightNovels()){
             lightNovel.getGenres().remove(genre);
@@ -47,10 +47,10 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public List<GenreReponse> getAllGenre() {
+    public List<GenreReponse> findAllGenre() {
         List<Genre> genres = genreRepository.findAll();
         if (genres.isEmpty()) {
-            throw new AppException(ErrorCode.NOTFOUND);
+            throw new AppException(ErrorCode.NOT_FOUND);
         }
         return genreRepository.findAll().stream().map(genreMapper::entiryToResponse).collect(Collectors.toList());
     }
@@ -59,7 +59,7 @@ public class GenreService implements IGenreService {
     @Transactional
     public GenreReponse updateGenre(GenreRequest request, int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(
-                ()-> new AppException(ErrorCode.NOTFOUND)
+                ()-> new AppException(ErrorCode.NOT_FOUND)
         );
         genre.setName(request.getName());
         genre.setDescription(request.getDescription());
@@ -68,9 +68,9 @@ public class GenreService implements IGenreService {
     }
 
     @Override
-    public GenreReponse getById(int id) {
+    public GenreReponse findById(int id) {
         Genre genre = genreRepository.findById(id).orElseThrow(
-                ()-> new AppException(ErrorCode.NOTFOUND)
+                ()-> new AppException(ErrorCode.NOT_FOUND)
         );
         return genreMapper.entiryToResponse(genre);
     }

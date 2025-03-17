@@ -28,13 +28,12 @@ public class AuthencationController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
 
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid UserRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
             throw new AppException(ErrorCode.REGISTER_REQUEST_INVALID);
         }
-        return ResponseEntity.ok(userService.addUser(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(request));
     }
 
     @PostMapping("/login")
@@ -46,5 +45,11 @@ public class AuthencationController {
     public ResponseEntity<?> logout(@AuthenticationPrincipal Jwt jwt) throws ParseException, JOSEException {
         authenticationService.logout(jwt.getTokenValue());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(@AuthenticationPrincipal Jwt jwt){
+
+        return ResponseEntity.ok(userService.getUserInfo(jwt.getTokenValue()));
     }
 }

@@ -16,13 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final AuthenticationService authenticationService;
-
-    @GetMapping("/info")
-    public ResponseEntity<?> getInfo(@AuthenticationPrincipal Jwt jwt){
-
-        return ResponseEntity.ok(userService.getUserInfo(jwt.getTokenValue()));
-    }
 
     @PatchMapping("/changeEmail")
     public ResponseEntity<?> changeEmail(@AuthenticationPrincipal Jwt jwt, String email) {

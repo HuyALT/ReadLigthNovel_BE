@@ -10,7 +10,10 @@ import com.my_project.LightNovel_web_backend.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -28,14 +31,16 @@ public class LightNovelMapper {
         return lightNovel;
     }
     public LigthNovelResponse entityToResponse(LightNovel lightNovel) {
-        LigthNovelResponse ligthNovelResponse = new LigthNovelResponse();
-        ligthNovelResponse.setAuthor(lightNovel.getAuthor());
-        ligthNovelResponse.setId(lightNovel.getId());
-        ligthNovelResponse.setStatus(lightNovel.getStatus());
-        ligthNovelResponse.setImage(lightNovel.getImage());
-        ligthNovelResponse.setName(lightNovel.getName());
-        ligthNovelResponse.setDescription(lightNovel.getDescription());
-        ligthNovelResponse.setTranslationGroups(lightNovel.getTranslationGroups());
-        return ligthNovelResponse;
+        List<String> genres = lightNovel.getGenres().stream().map(Genre::getName).toList();
+        return LigthNovelResponse.builder()
+                .id(lightNovel.getId())
+                .author(lightNovel.getAuthor())
+                .image(lightNovel.getImage())
+                .genres(genres)
+                .name(lightNovel.getName())
+                .translationGroups(lightNovel.getTranslationGroups())
+                .description(lightNovel.getDescription())
+                .status(lightNovel.getStatus())
+                .build();
     }
 }
