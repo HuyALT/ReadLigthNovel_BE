@@ -24,6 +24,4 @@ public class UserRequest {
     @Email
     @NotBlank
     private String email;
-
-    private String image;
 }

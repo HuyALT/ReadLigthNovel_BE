@@ -31,7 +31,7 @@ public class AuthencationController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid UserRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
-            throw new AppException(ErrorCode.REGISTER_REQUEST_INVALID);
+            throw new AppException(ErrorCode.REGISTER_REQUEST_INVALID, request);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(request));
     }

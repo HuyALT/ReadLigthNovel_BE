@@ -21,7 +21,7 @@ public class GenreAdminController {
     @PostMapping("/add")
     public ResponseEntity<?> addNewGenre(@RequestBody @Valid GenreRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.INVALID_REQUEST, request);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(genreService.addNew(request));
@@ -34,7 +34,12 @@ public class GenreAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editGener(@PathVariable Integer id, @RequestBody GenreRequest request) {
+    public ResponseEntity<?> editGener(@PathVariable Integer id,
+                                       @RequestBody @Valid GenreRequest request,
+                                       BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            throw new AppException(ErrorCode.INVALID_REQUEST, id);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(genreService.updateGenre(request, id));
     }
 }

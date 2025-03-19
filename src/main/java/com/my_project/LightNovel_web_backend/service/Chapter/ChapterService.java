@@ -28,7 +28,7 @@ public class ChapterService implements IChapterService {
     @Transactional
     public ChapterResponse addNew(ChapterRequest request) {
         LightNovel lightNovel = lightNovelRepository.findById(request.getLightNovelId()).orElseThrow(
-                ()->new AppException(ErrorCode.NOT_FOUND)
+                ()->new AppException(ErrorCode.NOT_FOUND, request)
         );
         Chapter chapter = chapterMapper.requestToEntity(request);
         chapter.setLightNovel(lightNovel);
@@ -41,7 +41,7 @@ public class ChapterService implements IChapterService {
     @Transactional
     public ChapterResponse updateChapter(ChapterRequest request, long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
-                ()->new AppException(ErrorCode.NOT_FOUND)
+                ()->new AppException(ErrorCode.NOT_FOUND, request)
         );
         chapter.setViewtotal(0);
         return chapterMapper.entityToResponse(chapter);
@@ -51,7 +51,7 @@ public class ChapterService implements IChapterService {
     @Transactional
     public void deleteChapter(long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
-                ()->new AppException(ErrorCode.NOT_FOUND)
+                ()->new AppException(ErrorCode.NOT_FOUND, chapterId)
         );
         chapterRepository.delete(chapter);
     }
@@ -59,7 +59,7 @@ public class ChapterService implements IChapterService {
     @Override
     public void increaseView(long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId).orElseThrow(
-                ()->new AppException(ErrorCode.NOT_FOUND)
+                ()->new AppException(ErrorCode.NOT_FOUND, chapterId)
         );
         chapter.setViewtotal(chapter.getViewtotal()+1);
         chapterRepository.save(chapter);
@@ -68,7 +68,7 @@ public class ChapterService implements IChapterService {
     @Override
     public List<ChapterResponse> findChaptersByLightNovel(long lightnovelId) {
         LightNovel lightNovel = lightNovelRepository.findById(lightnovelId).orElseThrow(
-                ()->new AppException(ErrorCode.NOT_FOUND)
+                ()->new AppException(ErrorCode.NOT_FOUND, lightnovelId)
         );
         return lightNovel.getChapters().stream().map(chapterMapper::entityToResponse).collect(Collectors.toList());
     }

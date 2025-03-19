@@ -22,7 +22,7 @@ public class ChapterAdminController {
     public ResponseEntity<?> addChapter(@RequestBody @Valid ChapterRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.INVALID_REQUEST, request);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(chapterService.addNew(request));
     }
@@ -32,7 +32,7 @@ public class ChapterAdminController {
                                            @PathVariable Long chapterId,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.INVALID_REQUEST, request);
         }
         return ResponseEntity.status(HttpStatus.OK).body(chapterService.updateChapter(request,chapterId));
     }

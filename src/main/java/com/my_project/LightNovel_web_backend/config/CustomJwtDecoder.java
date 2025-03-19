@@ -35,7 +35,7 @@ public class CustomJwtDecoder implements JwtDecoder {
             authenticationService.verifyToken(token);
 
         } catch (JOSEException | ParseException e) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.UNAUTHENTICATED, token);
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {

@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ErrorResponse {
     private int code;
     private String message;
+    private Object errorData;
 }

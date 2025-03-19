@@ -7,9 +7,24 @@ spring:
     password: 123456
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EM_USERNAME}
+    password: ${EM_APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 server:
   port: 8080
 jwt:
-  signer_key: ZxsI0fMn77S+5xSuE2AQyPQ/RDtABJ0ZgbebwgZmWAbKOnPWfBpFM8bdEAgdn8NQ
-
+  signer_key: ${JWT_SIGNER_KEY}
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}

@@ -10,8 +10,10 @@ public enum ErrorCode {
     EMAIL_EXISTED(102,"Email extisted", HttpStatus.BAD_REQUEST),
     REGISTER_REQUEST_INVALID(103,"Can not register", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(104, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    INVALID_REQUEST(105,"something was wrong with your request",HttpStatus.BAD_REQUEST),
-    NOT_FOUND(106, "No data available", HttpStatus.NOT_FOUND);
+    INVALID_REQUEST(105,"Something was wrong with your request",HttpStatus.BAD_REQUEST),
+    NOT_FOUND(106, "No data available", HttpStatus.NOT_FOUND),
+    ACCOUNT_UNVERIFIED(107, "Please verify account with Otp",HttpStatus.UNAUTHORIZED),
+    OTP_INVALID(108, "Otp invalid", HttpStatus.BAD_REQUEST);
 
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
@@ -22,4 +24,8 @@ public enum ErrorCode {
     private final int code;
     private final String message;
     private final HttpStatusCode statusCode;
+
+    public String getFormattedMessage(Object... args) {
+        return String.format(message, args);
+    }
 }

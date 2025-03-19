@@ -10,23 +10,12 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@RequiredArgsConstructor
 public class UserMapper {
-
-    private final PasswordEncoder passwordEncoder;
 
     public User requestToEntity(UserRequest request) {
         User user = new User();
         user.setUserName(request.getUserName());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
-        if (request.getImage().isEmpty()) {
-            user.setImage("https://ik.imagekit.io/dx1lgwjws/News/default-avatar.jpg?updatedAt=1716483707937");
-        }
-        else {
-            user.setImage(request.getImage());
-        }
         return user;
     }
 

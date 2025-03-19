@@ -22,7 +22,7 @@ public class LightNovelAdminController {
     public ResponseEntity<?> addNewLigthNovel(@RequestBody @Valid LigthNovelRequest request,
                                               BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.INVALID_REQUEST, request);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(ligthNovelService.addNew(request));
     }
@@ -32,7 +32,7 @@ public class LightNovelAdminController {
                                             @RequestBody @Valid LigthNovelRequest request,
                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
-            throw new AppException(ErrorCode.INVALID_REQUEST);
+            throw new AppException(ErrorCode.INVALID_REQUEST, id);
         }
         return ResponseEntity.status(HttpStatus.OK).body(ligthNovelService.updateLigthNovel(id, request));
     }

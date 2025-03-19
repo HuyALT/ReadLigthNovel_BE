@@ -2,12 +2,12 @@ package com.my_project.LightNovel_web_backend.service.Authentication;
 
 import com.my_project.LightNovel_web_backend.dto.request.AuthenticationRequest;
 import com.my_project.LightNovel_web_backend.dto.response.AuthenticationResponse;
-import com.my_project.LightNovel_web_backend.entity.TokenBlackList;
 import com.my_project.LightNovel_web_backend.entity.User;
+import com.my_project.LightNovel_web_backend.enums.Role;
 import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
-import com.my_project.LightNovel_web_backend.repository.TokenBackListRepository;
 import com.my_project.LightNovel_web_backend.repository.UserRepository;
+import com.my_project.LightNovel_web_backend.service.Otp.OtpService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -16,6 +16,7 @@ import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,17 +25,20 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class AuthenticationService implements IAuthencationService{
+public class AuthenticationService implements IAuthencationService {
 
     private final UserRepository userRepository;
 
-    private final TokenBackListRepository tokenBackListRepository;
+    private final OtpService otpService;
+
+    private final RedisTemplate<Object, Object> redisTemplate;
+
 
     @Value("${jwt.signer_key}")
     private String signer_key;
@@ -42,21 +46,25 @@ public class AuthenticationService implements IAuthencationService{
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        Optional<User> userOptional = userRepository.findByUserName(request.getUserName());
+        User user = userRepository.findByUserName(request.getUserName()).orElseThrow(
+                () -> new AppException(ErrorCode.UNAUTHENTICATED, request)
+        );
 
-        if (userOptional.isPresent()){
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            boolean authenticated = passwordEncoder.matches(request.getPassword(), userOptional.get().getPassword());
-            if (!authenticated){
-                throw new AppException(ErrorCode.UNAUTHENTICATED);
-            }
-            String token = generateToken(userOptional.get());
-            authenticationResponse.setToken(token);
-            authenticationResponse.setAuthenticate(true);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if (!authenticated) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED, request);
         }
-        else {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        if (user.getRole() == Role.UNVERIFIED) {
+            otpService.sendOtp(user.getEmail());
+            throw new AppException(ErrorCode.ACCOUNT_UNVERIFIED, user.getEmail());
         }
+
+        String token = generateToken(user);
+        authenticationResponse.setToken(token);
+        authenticationResponse.setAuthenticate(true);
+
         return authenticationResponse;
     }
 
@@ -66,11 +74,8 @@ public class AuthenticationService implements IAuthencationService{
 
         String uuid = signToken.getJWTClaimsSet().getJWTID();
         Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-
-        TokenBlackList tokenBlackList = new TokenBlackList(uuid,expiryTime);
-
-        tokenBackListRepository.save(tokenBlackList);
-
+        redisTemplate.opsForValue().set("Block:"+uuid, token);
+        redisTemplate.expire(uuid, expiryTime.getTime(), TimeUnit.MILLISECONDS);
     }
 
     private String generateToken(User user) {
@@ -78,7 +83,7 @@ public class AuthenticationService implements IAuthencationService{
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUserName())
-                .issuer("readlightnovel.com")
+                .issuer("RLH.com")
                 .issueTime(new Date())
                 .jwtID(UUID.randomUUID().toString())
                 .expirationTime(new Date(
@@ -108,14 +113,16 @@ public class AuthenticationService implements IAuthencationService{
 
         boolean verified = signedJWT.verify(verifier);
 
-        Optional<TokenBlackList> tokenBlackList = tokenBackListRepository.findById(signedJWT.getJWTClaimsSet().getJWTID());
+        String uuid = signedJWT.getJWTClaimsSet().getJWTID();
 
-        if (tokenBlackList.isPresent()) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        String datatoken = (String) redisTemplate.opsForValue().get("Block:"+uuid);
+
+        if (datatoken!=null) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED, token);
         }
 
         if (!verified && expiryTime.after(new Date())) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(ErrorCode.UNAUTHENTICATED, token);
         }
 
         return signedJWT;
