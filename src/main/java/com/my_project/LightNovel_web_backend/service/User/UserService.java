@@ -88,7 +88,7 @@ public class UserService implements IUserService {
             return userRepository.findByUserName(username).orElseThrow(
                     ()-> new AppException(ErrorCode.UNAUTHENTICATED, token)
             );
-        } catch (JOSEException | ParseException e) {
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }

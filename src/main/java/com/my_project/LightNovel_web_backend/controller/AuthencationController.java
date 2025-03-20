@@ -46,10 +46,4 @@ public class AuthencationController {
         authenticationService.logout(jwt.getTokenValue());
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/info")
-    public ResponseEntity<?> getInfo(@AuthenticationPrincipal Jwt jwt){
-
-        return ResponseEntity.ok(userService.getUserInfo(jwt.getTokenValue()));
-    }
 }

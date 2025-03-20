@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -22,9 +23,9 @@ public class Comment {
     private long id;
     private String content;
 
-    @CreatedDate
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
+    @UpdateTimestamp
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

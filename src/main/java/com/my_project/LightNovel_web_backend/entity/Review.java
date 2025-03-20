@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "reveiws")
-public class Reveiw {
+@Table(name = "reviews")
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,6 +33,6 @@ public class Reveiw {
     private LightNovel lightNovel;
 
     @UpdateTimestamp
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 }

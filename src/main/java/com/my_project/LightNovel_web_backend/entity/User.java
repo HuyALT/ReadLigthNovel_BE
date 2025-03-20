@@ -46,7 +46,7 @@ public class User {
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Reveiw> reveiws;
+    private List<Review> reviews;
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;

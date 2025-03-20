@@ -55,7 +55,7 @@ public class LightNovel {
     private String likeTotal;
 
     @OneToMany(mappedBy = "lightNovel", cascade = CascadeType.REMOVE)
-    private List<Reveiw> reveiws;
+    private List<Review> reviews;
 
     @ManyToMany(mappedBy = "lightNovels")
     private List<User> users;

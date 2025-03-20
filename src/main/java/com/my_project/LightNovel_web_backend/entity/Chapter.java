@@ -1,5 +1,6 @@
 package com.my_project.LightNovel_web_backend.entity;
 
+import com.my_project.LightNovel_web_backend.enums.ChapterStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -37,9 +38,13 @@ public class Chapter {
 
     private int viewtotal;
 
+    @Enumerated(EnumType.STRING)
+    private ChapterStatus chapterStatus;
+
     @ManyToOne
     private LightNovel lightNovel;
 
     @OneToMany(mappedBy = "chapter")
     private List<Comment> comments;
+
 }

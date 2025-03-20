@@ -69,13 +69,17 @@ public class AuthenticationService implements IAuthencationService {
     }
 
     @Override
-    public void logout(String token) throws JOSEException, ParseException {
+    public void logout(String token) {
         SignedJWT signToken = verifyToken(token);
+        try {
+            String uuid = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+            redisTemplate.opsForValue().set("Block:"+uuid, token);
+            redisTemplate.expire("Block:"+uuid, expiryTime.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        } catch (ParseException e) {
+            log.error("logout fail");
+        }
 
-        String uuid = signToken.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-        redisTemplate.opsForValue().set("Block:"+uuid, token);
-        redisTemplate.expire(uuid, expiryTime.getTime(), TimeUnit.MILLISECONDS);
     }
 
     private String generateToken(User user) {
@@ -87,7 +91,7 @@ public class AuthenticationService implements IAuthencationService {
                 .issueTime(new Date())
                 .jwtID(UUID.randomUUID().toString())
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()
                 ))
                 .claim("scope", user.getRole())
                 .build();
@@ -104,28 +108,33 @@ public class AuthenticationService implements IAuthencationService {
         }
     }
 
-    public SignedJWT verifyToken(String token) throws JOSEException, ParseException {
-        JWSVerifier verifier = new MACVerifier(signer_key.getBytes());
+    public SignedJWT verifyToken(String token)  {
+        try {
+            JWSVerifier verifier = new MACVerifier(signer_key.getBytes());
 
-        SignedJWT signedJWT = SignedJWT.parse(token);
+            SignedJWT signedJWT = SignedJWT.parse(token);
 
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        boolean verified = signedJWT.verify(verifier);
+            boolean verified = signedJWT.verify(verifier);
 
-        String uuid = signedJWT.getJWTClaimsSet().getJWTID();
+            String uuid = signedJWT.getJWTClaimsSet().getJWTID();
 
-        String datatoken = (String) redisTemplate.opsForValue().get("Block:"+uuid);
+            String datatoken = (String) redisTemplate.opsForValue().get("Block:"+uuid);
 
-        if (datatoken!=null) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED, token);
+            if (datatoken!=null) {
+                throw new AppException(ErrorCode.UNAUTHENTICATED, token);
+            }
+
+            if (!verified && expiryTime.after(new Date())) {
+                throw new AppException(ErrorCode.UNAUTHENTICATED, token);
+            }
+
+            return signedJWT;
+        } catch (JOSEException | ParseException e) {
+            log.error("Token check error");
+            return null;
         }
-
-        if (!verified && expiryTime.after(new Date())) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED, token);
-        }
-
-        return signedJWT;
     }
 
 }

@@ -27,4 +27,10 @@ public class UserController {
         return ResponseEntity.ok(userService.changeImage(jwt.getTokenValue(),image));
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(@AuthenticationPrincipal Jwt jwt){
+
+        return ResponseEntity.ok(userService.getUserInfo(jwt.getTokenValue()));
+    }
+
 }
