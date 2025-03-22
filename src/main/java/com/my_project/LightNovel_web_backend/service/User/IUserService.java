@@ -8,10 +8,10 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface IUserService  {
-    UserResponse addUser(UserRequest request);
     List<UserResponse> getAllUser();
-    UserResponse getUserInfo(String token) throws ParseException, JOSEException;
-    UserResponse changeImage(String token, String image);
-    UserResponse chageEmail(String token, String email);
-    boolean changePassword(String newPassword, String oldPassword);
+    UserResponse getUserInfo(String userName);
+    UserResponse changeImage(String userName, String image);
+    UserResponse chageEmail(String userName, String email);
+    boolean changePassword(String newPassword, String oldPassword, String userName);
+
 }

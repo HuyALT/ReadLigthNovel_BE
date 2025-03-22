@@ -44,15 +44,15 @@ public class OtpService implements IOtpService{
             helper.setTo(email);
             helper.setSubject("RLH.com");
             helper.setText("Your OTP code is: " + otp + "This code will expire after 5 minutes.");
-
             mailSender.send(message);
+            log.info("{} send to ",email);
         } catch (MessagingException e) {
             log.error("Mail error");
         }
     }
 
     @Override
-    public void verifyOtp(String otpInput, String email) {
+    public boolean verifyOtp(String otpInput, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 ()->new AppException(ErrorCode.INVALID_REQUEST, email)
         );
@@ -61,9 +61,10 @@ public class OtpService implements IOtpService{
             throw new AppException(ErrorCode.OTP_INVALID, otpInput);
         }
         if (otp.compareTo(otpInput)==0) {
-            user.setRole(Role.USER);
             redisTemplate.delete("Otp:"+email);
             userRepository.save(user);
+            return true;
         }
+        return false;
     }
 }

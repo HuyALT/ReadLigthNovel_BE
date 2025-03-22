@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.UUID;
+
 @WebMvcTest(AuthencationController.class)
 @AutoConfigureMockMvc
 public class AuthencationControllerTest {
@@ -43,7 +45,6 @@ public class AuthencationControllerTest {
                 .email("1234455556")
                 .userName("TESTUSER")
                 .password("123456")
-                .image("abc")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -62,7 +63,6 @@ public class AuthencationControllerTest {
                 .email("example@gmail.com")
                 .userName("TEST")
                 .password("123456")
-                .image("abc")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -80,7 +80,6 @@ public class AuthencationControllerTest {
                 .email("example@gmail.com")
                 .userName("TESTUSER")
                 .password("123")
-                .image("abc")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userRequest);
@@ -97,18 +96,17 @@ public class AuthencationControllerTest {
         userRequest = UserRequest.builder()
                 .email("example@gmail.com")
                 .userName("TESTUSER")
-                .image("abc")
                 .password("123456")
                 .build();
         userResponse = UserResponse.builder()
-                .id(1L)
+                .id(UUID.randomUUID())
                 .userName("TESTUSER")
                 .email("example@gmail.com")
                 .image("abc")
                 .role(Role.USER)
                 .build();
         String content = new ObjectMapper().writeValueAsString(userRequest);
-        Mockito.when(userService.addUser(ArgumentMatchers.any())).thenReturn(userResponse);
+        Mockito.when(authenticationService.addUser(ArgumentMatchers.any())).thenReturn(userResponse);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/v1/auth/register")

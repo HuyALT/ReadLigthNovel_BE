@@ -1,6 +1,6 @@
 package com.my_project.LightNovel_web_backend.config;
 
-import com.my_project.LightNovel_web_backend.service.Authentication.AuthenticationService;
+import com.my_project.LightNovel_web_backend.service.Jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -20,13 +20,13 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Value("${jwt.signer_key}")
     private String signerKey;
 
-    private final AuthenticationService authenticationService;
+    private final JwtService jwtService;
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        authenticationService.verifyToken(token);
+        jwtService.verifyToken(token);
 
         if (Objects.isNull(nimbusJwtDecoder)) {
             SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");

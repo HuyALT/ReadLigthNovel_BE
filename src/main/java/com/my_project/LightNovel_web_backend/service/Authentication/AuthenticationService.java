@@ -1,31 +1,28 @@
 package com.my_project.LightNovel_web_backend.service.Authentication;
 
 import com.my_project.LightNovel_web_backend.dto.request.AuthenticationRequest;
+import com.my_project.LightNovel_web_backend.dto.request.UserRequest;
 import com.my_project.LightNovel_web_backend.dto.response.AuthenticationResponse;
+import com.my_project.LightNovel_web_backend.dto.response.UserResponse;
 import com.my_project.LightNovel_web_backend.entity.User;
 import com.my_project.LightNovel_web_backend.enums.Role;
 import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
+import com.my_project.LightNovel_web_backend.mapper.UserMapper;
 import com.my_project.LightNovel_web_backend.repository.UserRepository;
+import com.my_project.LightNovel_web_backend.service.Jwt.JwtService;
 import com.my_project.LightNovel_web_backend.service.Otp.OtpService;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
@@ -39,9 +36,11 @@ public class AuthenticationService implements IAuthencationService {
 
     private final RedisTemplate<Object, Object> redisTemplate;
 
+    private final JwtService jwtService;
 
-    @Value("${jwt.signer_key}")
-    private String signer_key;
+    private final UserMapper userMapper;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -61,7 +60,7 @@ public class AuthenticationService implements IAuthencationService {
             throw new AppException(ErrorCode.ACCOUNT_UNVERIFIED, user.getEmail());
         }
 
-        String token = generateToken(user);
+        String token = jwtService.generateToken(user);
         authenticationResponse.setToken(token);
         authenticationResponse.setAuthenticate(true);
 
@@ -69,8 +68,25 @@ public class AuthenticationService implements IAuthencationService {
     }
 
     @Override
+    @Transactional
+    public UserResponse addUser(UserRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())){
+            throw new AppException(ErrorCode.USER_EXISTED, request.getUserName());
+        }
+        if (userRepository.existsByEmail(request.getEmail())){
+            throw new AppException(ErrorCode.EMAIL_EXISTED, request.getEmail());
+        }
+        User user = userMapper.requestToEntity(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.UNVERIFIED);
+        user.setImage("https://ik.imagekit.io/dx1lgwjws/News/default-avatar.jpg?updatedAt=1716483707937");
+
+        return userMapper.entityToResponse(userRepository.save(user));
+    }
+
+    @Override
     public void logout(String token) {
-        SignedJWT signToken = verifyToken(token);
+        SignedJWT signToken = jwtService.verifyToken(token);
         try {
             String uuid = signToken.getJWTClaimsSet().getJWTID();
             Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
@@ -82,59 +98,58 @@ public class AuthenticationService implements IAuthencationService {
 
     }
 
-    private String generateToken(User user) {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-
-        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUserName())
-                .issuer("RLH.com")
-                .issueTime(new Date())
-                .jwtID(UUID.randomUUID().toString())
-                .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()
-                ))
-                .claim("scope", user.getRole())
-                .build();
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-
-        JWSObject jwsObject = new JWSObject(header, payload);
-
-        try {
-            jwsObject.sign(new MACSigner(signer_key.getBytes()));
-            return jwsObject.serialize();
-        } catch (JOSEException e) {
-            log.error("Can not create token", e);
-            throw new RuntimeException(e);
+    @Override
+    public void verifyUser(String email, String otpInput) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()->new AppException(ErrorCode.INVALID_REQUEST, email)
+        );
+        if (otpService.verifyOtp(otpInput, email)) {
+            user.setRole(Role.USER);
+            userRepository.save(user);
+            log.info("{} have role USER", email);
+        }
+        else {
+            throw new AppException(ErrorCode.OTP_INVALID, otpInput);
         }
     }
 
-    public SignedJWT verifyToken(String token)  {
-        try {
-            JWSVerifier verifier = new MACVerifier(signer_key.getBytes());
-
-            SignedJWT signedJWT = SignedJWT.parse(token);
-
-            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-            boolean verified = signedJWT.verify(verifier);
-
-            String uuid = signedJWT.getJWTClaimsSet().getJWTID();
-
-            String datatoken = (String) redisTemplate.opsForValue().get("Block:"+uuid);
-
-            if (datatoken!=null) {
-                throw new AppException(ErrorCode.UNAUTHENTICATED, token);
-            }
-
-            if (!verified && expiryTime.after(new Date())) {
-                throw new AppException(ErrorCode.UNAUTHENTICATED, token);
-            }
-
-            return signedJWT;
-        } catch (JOSEException | ParseException e) {
-            log.error("Token check error");
-            return null;
+    @Override
+    public void requestResetPassword(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()->new AppException(ErrorCode.INVALID_REQUEST, email)
+        );
+        if (user.getRole()==Role.USER || user.getRole()==Role.ADMIN) {
+            otpService.sendOtp(email);
+            return;
         }
+        throw new AppException(ErrorCode.INVALID_REQUEST, email);
     }
+
+    @Override
+    @Transactional
+    public void verifyRequestResetPassword(String email, String otpInput) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()->new AppException(ErrorCode.INVALID_REQUEST, email)
+        );
+        if (otpService.verifyOtp(otpInput, email)) {
+          user.setRole(Role.RESETPASS);
+          userRepository.save(user);
+        }
+        throw new AppException(ErrorCode.OTP_INVALID, otpInput);
+    }
+
+    @Override
+    public void resetPassword(String newPassword, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()->new AppException(ErrorCode.INVALID_REQUEST, email)
+        );
+        if (user.getRole()!=Role.RESETPASS) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED, email);
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        log.info("{} password change", newPassword);
+    }
+
+
 
 }
