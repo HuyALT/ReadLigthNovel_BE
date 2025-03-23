@@ -1,6 +1,7 @@
 package com.my_project.LightNovel_web_backend.controller.admin;
 
 import com.my_project.LightNovel_web_backend.dto.request.ChapterRequest;
+import com.my_project.LightNovel_web_backend.enums.ChapterStatus;
 import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
 import com.my_project.LightNovel_web_backend.service.Chapter.ChapterService;
@@ -41,6 +42,13 @@ public class ChapterAdminController {
     public ResponseEntity<?> deleteChapter(@PathVariable Long chapterId) {
         chapterService.deleteChapter(chapterId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable long id,
+                                          @RequestParam ChapterStatus status) {
+        chapterService.changeStatus(id, status);
+        return ResponseEntity.ok().build();
     }
 
 }

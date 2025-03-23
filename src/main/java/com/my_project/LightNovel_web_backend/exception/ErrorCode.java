@@ -13,7 +13,8 @@ public enum ErrorCode {
     INVALID_REQUEST(105,"Something was wrong with your request",HttpStatus.BAD_REQUEST),
     NOT_FOUND(106, "No data available", HttpStatus.NOT_FOUND),
     ACCOUNT_UNVERIFIED(107, "Please verify account with Otp",HttpStatus.UNAUTHORIZED),
-    OTP_INVALID(108, "Otp invalid", HttpStatus.BAD_REQUEST);
+    OTP_INVALID(108, "Otp invalid", HttpStatus.BAD_REQUEST),
+    TOO_MANNY_REQUEST(109, "Too manny request", HttpStatus.TOO_MANY_REQUESTS);
 
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

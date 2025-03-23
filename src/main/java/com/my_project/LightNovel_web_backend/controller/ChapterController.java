@@ -14,9 +14,16 @@ public class ChapterController {
     private final ChapterService chapterService;
 
     @GetMapping("/{lightNovelId}")
-    public ResponseEntity<?> getbyLightNovel(@PathVariable Long lightNovelId) {
+    public ResponseEntity<?> getbyLightNovel(@PathVariable long lightNovelId) {
 
         return ResponseEntity.status(HttpStatus.OK).body(chapterService.findChaptersByLightNovel(lightNovelId));
+    }
+
+    @PostMapping("/{lightNovelId}")
+    public ResponseEntity<?> incrView(@PathVariable long lightNovelId,
+                                      @RequestParam String ipAddress) {
+        chapterService.increaseView(lightNovelId, ipAddress);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.my_project.LightNovel_web_backend.controller.admin;
 
 import com.my_project.LightNovel_web_backend.dto.request.LigthNovelRequest;
+import com.my_project.LightNovel_web_backend.enums.LigthNovelStatus;
 import com.my_project.LightNovel_web_backend.exception.AppException;
 import com.my_project.LightNovel_web_backend.exception.ErrorCode;
 import com.my_project.LightNovel_web_backend.service.LightNovel.LigthNovelService;
@@ -43,5 +44,12 @@ public class LightNovelAdminController {
             return ResponseEntity.ok("Delete Success");
         }
         return ResponseEntity.internalServerError().body("Server error");
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> changeStatus(@PathVariable long id,
+                                          @RequestParam LigthNovelStatus status) {
+        ligthNovelService.changeStatus(id, status);
+        return ResponseEntity.ok().build();
     }
 }

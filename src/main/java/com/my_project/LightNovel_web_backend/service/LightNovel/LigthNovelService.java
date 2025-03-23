@@ -123,4 +123,14 @@ public class LigthNovelService implements ILigthNovelService {
 
         return lightNovelMapper.entityToResponse(lightNovel);
     }
+
+    @Override
+    @Transactional
+    public void changeStatus(long id, LigthNovelStatus status) {
+        LightNovel lightNovel = lightNovelRepository.findById(id).orElseThrow(
+                ()->new AppException(ErrorCode.INVALID_REQUEST, id)
+        );
+        lightNovel.setStatus(status);
+        lightNovelRepository.save(lightNovel);
+    }
 }
